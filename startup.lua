@@ -9,15 +9,10 @@ fuel = {
 }
 
 function isInventoryFull()
-    local isFull = true
     for slotIndex = 1, 16, 1
     do
-        if turtle.getItemCount() == 0 then
-            isFull = false
-            break
-        end
+        if turtle.getItemCount() == 0 then return false end
     end
-    return isFull
 end
 
 function shouldKeepItem(item)
