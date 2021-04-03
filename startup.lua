@@ -49,9 +49,27 @@ while true do
 
     turtle.dig()
     sortInventory()
-
-    turtle.forward()
-
-    turtle.digUp()
+    turtle.turnRight()
+    turtle.dig()
     sortInventory()
+    turtle.turnRight()
+    turtle.turnRight()
+    turtle.dig()
+    sortInventory()
+    turtle.turnRight()
+
+    turtle.up()
+
+    turtle.dig()
+    sortInventory()
+    turtle.turnRight()
+    turtle.dig()
+    sortInventory()
+    turtle.turnRight()
+    turtle.turnRight()
+    turtle.dig()
+    sortInventory()
+    turtle.turnRight()
+
+    turtle.down()
 end
