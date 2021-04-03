@@ -11,7 +11,7 @@ fuel = {
 function isInventoryFull()
     for slotIndex = 1, 16, 1
     do
-        if turtle.getItemCount() == 0 then return false end
+        if turtle.getItemCount(slotIndex) == 0 then return false end
     end
     return true
 end
