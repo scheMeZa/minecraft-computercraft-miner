@@ -22,18 +22,20 @@ end
 
 function shouldKeepItem(item)
     for _, value in ipairs(keep) do
-        if item.name == value then
-            return true
-        end
+        if item.name == value then return true end
     end
 
     for _, value in ipairs(fuel) do
-        if item.name == value then
-            return true
-        end
+        if item.name == value then return true end
     end
 
     return false
+end
+
+function dropItem(slotIndex)
+    turtle.select(slotIndex)
+    turtle.drop()
+    turtle.select(1)
 end
 
 function sortInventory()
@@ -41,29 +43,19 @@ function sortInventory()
     do
         local item = turtle.getItemDetail(slotIndex)
         if item then
-            if shouldKeepItem(item) == false then
-                turtle.select(slotIndex)
-                turtle.drop()
-                turtle.select(1)
-            end
+            if shouldKeepItem(item) == false then dropItem(slotIndex) end
         end
     end
 end
 
-sortInventory()
+while true do
+    if isInventoryFull() then break end
 
---while true do
---    sortInventory()
---
---    if isInventoryFull() then
---        break
---    end
---
---    turtle.dig()
---    sortInventory()
---
---    turtle.forward()
---
---    turtle.digUp()
---    sortInventory()
---end
+    turtle.dig()
+    sortInventory()
+
+    turtle.forward()
+
+    turtle.digUp()
+    sortInventory()
+end
