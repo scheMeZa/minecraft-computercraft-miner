@@ -72,4 +72,6 @@ while true do
     turtle.turnRight()
 
     turtle.down()
+
+    turtle.forward()
 end
