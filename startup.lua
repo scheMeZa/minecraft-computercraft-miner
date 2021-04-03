@@ -13,6 +13,7 @@ function isInventoryFull()
     do
         if turtle.getItemCount() == 0 then return false end
     end
+    return true
 end
 
 function shouldKeepItem(item)
