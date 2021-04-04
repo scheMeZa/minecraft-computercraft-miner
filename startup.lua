@@ -73,8 +73,8 @@ function refuel()
 end
 
 function shouldDig()
-    local item = turtle.inspect()
-    return isWhitelistedItem(item) or isFuelItem(item)
+    local success, item = turtle.inspect()
+    return success and (isWhitelistedItem(item) or isFuelItem(item))
 end
 
 while true do
