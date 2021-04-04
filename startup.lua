@@ -2,8 +2,11 @@ keep = {
     "minecraft:diamond",
     "minecraft:iron_ore",
     "minecraft:gold_ore",
+    "mysticalworld:amethyst",
+    "mysticalworld:amethyst_ore",
+    "mysticalworld:quicksilver_ore",
     "druidcraft:moonstone",
-    "forbidden_arcanus:xpetrified_orb",
+    "forbidden_arcanus:xpetrified_ore",
     "tetra:geode"
 }
 
@@ -17,6 +20,8 @@ coordinates = {
     y = 0,
     z = 0
 }
+
+lastPosition = {}
 
 direction = "forward"
 
@@ -99,9 +104,13 @@ function refuel()
     end
 end
 
-function shouldDig()
+function isSoughtAfterBlock()
     local success, item = turtle.inspect()
     return success and (isWhitelistedItem(item) or isFuelItem(item))
+end
+
+function shouldDig()
+    return isSoughtAfterBlock()
 end
 
 function turnLeft()
@@ -147,26 +156,46 @@ function moveForward()
     coordinates.z = coordinates.z - 1
 end
 
-function evaluateForward()
+function dig()
     turtle.dig()
     sortInventory()
 end
 
+function followBlocks()
+    -- We're already looking at the block we want
+    lastPosition = {
+        direction = direction,
+        x = coordinates.x,
+        y = coordinates.y,
+        z = coordinates.z,
+    }
+
+    dig()
+    moveForward()
+end
+
+function comeBack()
+    -- TODO
+    setDirection(lastPosition.direction)
+end
+
+function evaluateForward()
+--    if isSoughtAfterBlock() then
+--        followBlocks()
+--        comeBack()
+--    end
+    dig()
+end
+
 function evaluateRight()
     turnRight()
-    if shouldDig() then
-        turtle.dig()
-        sortInventory()
-    end
+    if shouldDig() then dig() end
     turnLeft()
 end
 
 function evaluateLeft()
     turnLeft()
-    if shouldDig() then
-        turtle.dig()
-        sortInventory()
-    end
+    if shouldDig() then dig() end
     turnRight()
 end
 
