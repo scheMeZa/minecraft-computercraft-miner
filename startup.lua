@@ -171,7 +171,7 @@ function evaluateLeft()
 end
 
 while true do
-    if isInventoryFull() then break end
+    if isInventoryFull() then print("My inventory is full! Mr. Stark, I don't feel so good...") break end
     if shouldRefuel() and hasNoFuel() then print("I'm outa fuel!") break end
     if shouldRefuel() then refuel() end
     evaluateForward()
@@ -184,5 +184,3 @@ while true do
     moveDown()
     moveForward()
 end
-
-print("My inventory is full! Mr. Stark, I don't feel so good...")
