@@ -1,5 +1,6 @@
 keep = {
     "minecraft:diamond",
+    "minecraft:diamond_ore",
     "minecraft:iron_ore",
     "minecraft:gold_ore",
     "mysticalworld:amethyst",
