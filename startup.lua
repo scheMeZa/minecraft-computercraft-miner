@@ -12,7 +12,9 @@ keep = {
 
 fuel = {
     "minecraft:coal",
-    "druidcraft:fiery_glass"
+    "minecraft:coal_ore",
+    "druidcraft:fiery_glass",
+    "druidcraft:fiery_glass_ore"
 }
 
 coordinates = {
