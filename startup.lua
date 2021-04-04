@@ -1,6 +1,10 @@
 keep = {
     "minecraft:diamond",
-    "druidcraft:moonstone"
+    "minecraft:iron_ore",
+    "minecraft:gold_ore",
+    "druidcraft:moonstone",
+    "forbidden_arcanus:xpetrified_orb",
+    "tetra:geode"
 }
 
 fuel = {
@@ -62,6 +66,20 @@ end
 
 function shouldRefuel()
     return turtle.getFuelLevel() < 50
+end
+
+function hasFuel()
+    for slotIndex = 1, 16, 1
+    do
+        if isFuelItem(turtle.getItemDetail(slotIndex)) then
+            return true
+        end
+    end
+    return false
+end
+
+function hasNoFuel()
+    return not hasFuel()
 end
 
 function consumeFuel(slotIndex)
@@ -153,6 +171,7 @@ end
 
 while true do
     if isInventoryFull() then break end
+    if shouldRefuel() and hasNoFuel() then print("I'm outa fuel!") break end
     if shouldRefuel() then refuel() end
     evaluateForward()
     evaluateRight()
