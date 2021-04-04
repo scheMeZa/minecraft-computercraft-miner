@@ -1,3 +1,5 @@
+os.setComputerLabel("Hi! My name is Ax")
+
 keep = {
     "minecraft:diamond",
     "druidcraft:moonstone"
@@ -70,36 +72,60 @@ function refuel()
     end
 end
 
+function shouldDig()
+    local item = turtle.inspect()
+    return isWhitelistedItem(item) or isFuelItem(item)
+end
+
 while true do
     if isInventoryFull() then break end
     if shouldRefuel() then refuel() end
 
-    turtle.dig()
-    sortInventory()
-    turtle.turnRight()
-    turtle.dig()
-    sortInventory()
-    turtle.turnLeft()
-    turtle.turnLeft()
+    -- Forward
     turtle.dig()
     sortInventory()
     turtle.turnRight()
 
+    -- Right
+    if shouldDig() then
+        turtle.dig()
+        sortInventory()
+    end
+
+    -- Left
+    turtle.turnLeft()
+    turtle.turnLeft()
+    if shouldDig() then
+        turtle.dig()
+        sortInventory()
+    end
+
+    -- Up & Forward
+    turtle.turnRight()
     turtle.up()
+    turtle.dig()
+    sortInventory()
 
-    turtle.dig()
-    sortInventory()
+    -- Right
     turtle.turnRight()
-    turtle.dig()
-    sortInventory()
+    if shouldDig() then
+        turtle.dig()
+        sortInventory()
+    end
+
+    -- Left
     turtle.turnLeft()
     turtle.turnLeft()
-    turtle.dig()
-    sortInventory()
-    turtle.turnRight()
+    if shouldDig() then
+        turtle.dig()
+        sortInventory()
+    end
 
+    -- Down & Forward
+    turtle.turnRight()
     turtle.down()
 
+    -- Move Forward
     turtle.forward()
 end
 
