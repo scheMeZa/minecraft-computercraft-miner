@@ -1,5 +1,3 @@
-os.setComputerLabel("Hi! My name is Ax")
-
 keep = {
     "minecraft:diamond",
     "druidcraft:moonstone"
@@ -9,6 +7,16 @@ fuel = {
     "minecraft:coal",
     "druidcraft:fiery_glass"
 }
+
+coordinates = {
+    x = 0,
+    y = 0,
+    z = 0
+}
+
+direction = "forward"
+
+os.setComputerLabel("Hi! My name is Ax")
 
 function isInventoryFull()
     for slotIndex = 1, 16, 1
@@ -77,56 +85,84 @@ function shouldDig()
     return success and (isWhitelistedItem(item) or isFuelItem(item))
 end
 
+function turnLeft()
+    turtle.turnLeft()
+
+    if direction == "forward" then
+        direction = "left"
+    elseif direction == "right" then
+        direction = "forward"
+    elseif direction == "behind" then
+        direction = "right"
+    elseif direction == "left" then
+        direction = "behind"
+    end
+end
+
+function turnRight()
+    turtle.turnRight()
+
+    if direction == "forward" then
+        direction = "right"
+    elseif direction == "right" then
+        direction = "behind"
+    elseif direction == "behind" then
+        direction = "left"
+    elseif direction == "left" then
+        direction = "forward"
+    end
+end
+
+function moveUp()
+    turtle.up()
+    coordinates.y = coordinates.y + 1
+end
+
+function moveDown()
+    turtle.down()
+    coordinates.y = coordinates.y - 1
+end
+
+function moveForward()
+    turtle.forward()
+    coordinates.z = coordinates.z - 1
+end
+
+function evaluateForward()
+    turtle.dig()
+    sortInventory()
+end
+
+function evaluateRight()
+    turnRight()
+    if shouldDig() then
+        turtle.dig()
+        sortInventory()
+    end
+    turnLeft()
+end
+
+function evaluateLeft()
+    turnLeft()
+    if shouldDig() then
+        turtle.dig()
+        sortInventory()
+    end
+    turnRight()
+end
+
 while true do
     if isInventoryFull() then break end
     if shouldRefuel() then refuel() end
-
-    -- Forward
-    turtle.dig()
-    sortInventory()
-    turtle.turnRight()
-
-    -- Right
-    if shouldDig() then
-        turtle.dig()
-        sortInventory()
-    end
-
-    -- Left
-    turtle.turnLeft()
-    turtle.turnLeft()
-    if shouldDig() then
-        turtle.dig()
-        sortInventory()
-    end
-
-    -- Up & Forward
-    turtle.turnRight()
-    turtle.up()
-    turtle.dig()
-    sortInventory()
-
-    -- Right
-    turtle.turnRight()
-    if shouldDig() then
-        turtle.dig()
-        sortInventory()
-    end
-
-    -- Left
-    turtle.turnLeft()
-    turtle.turnLeft()
-    if shouldDig() then
-        turtle.dig()
-        sortInventory()
-    end
-
-    -- Down & Forward
-    turtle.turnRight()
-    turtle.down()
-
-    -- Move Forward
-    turtle.forward()
+    evaluateForward()
+    evaluateRight()
+    evaluateLeft()
+    moveUp()
+    evaluateForward()
+    evaluateRight()
+    evaluateLeft()
+    moveDown()
+    moveForward()
 end
 
 print("My inventory is full! Mr. Stark, I don't feel so good...")
