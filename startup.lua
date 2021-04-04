@@ -111,6 +111,16 @@ function isSoughtAfterBlock()
     return success and (isWhitelistedItem(item) or isFuelItem(item))
 end
 
+function isSoughtAfterBlockUp()
+    local success, item = turtle.inspectUp()
+    return success and (isWhitelistedItem(item) or isFuelItem(item))
+end
+
+function isSoughtAfterBlockDown()
+    local success, item = turtle.inspectDown()
+    return success and (isWhitelistedItem(item) or isFuelItem(item))
+end
+
 function shouldDig()
     return isSoughtAfterBlock()
 end
@@ -192,7 +202,18 @@ function followBlocks()
     dig()
     moveForward()
     evaluate()
---    comeBack()
+end
+
+function followBlocksUp()
+    digUp()
+    moveUp()
+    evaluate()
+end
+
+function followBlocksDown()
+    digDown()
+    moveDown()
+    evaluate()
 end
 
 function evaluateForward()
@@ -212,11 +233,11 @@ function evaluateLeft()
 end
 
 function evaluateUp()
-    if shouldDigUp() then digUp() end
+    if isSoughtAfterBlockUp() then followBlocksUp() end
 end
 
 function evaluateDown()
-    if shouldDigDown() then digDown() end
+    if isSoughtAfterBlockDown() then followBlocksDown() end
 end
 
 function evaluate()
