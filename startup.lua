@@ -23,7 +23,7 @@ coordinates = {
     z = 0
 }
 
-lastPosition = {}
+lastLocation = {}
 
 direction = "forward"
 
@@ -115,6 +115,16 @@ function shouldDig()
     return isSoughtAfterBlock()
 end
 
+function shouldDigUp()
+    local success, item = turtle.inspectUp()
+    return success and (isWhitelistedItem(item) or isFuelItem(item))
+end
+
+function shouldDigDown()
+    local success, item = turtle.inspectDown()
+    return success and (isWhitelistedItem(item) or isFuelItem(item))
+end
+
 function turnLeft()
     turtle.turnLeft()
 
@@ -163,55 +173,69 @@ function dig()
     sortInventory()
 end
 
-function followBlocks()
-    -- We're already looking at the block we want
-    lastPosition = {
-        direction = direction,
-        x = coordinates.x,
-        y = coordinates.y,
-        z = coordinates.z,
-    }
+function digUp()
+    turtle.digUp()
+    sortInventory()
+end
 
-    dig()
-    moveForward()
+function digDown()
+    turtle.digDown()
+    sortInventory()
 end
 
 function comeBack()
     -- TODO
-    setDirection(lastPosition.direction)
+    setDirection(lastLocation.direction)
+end
+
+function followBlocks()
+    dig()
+    moveForward()
+    evaluate()
+--    comeBack()
 end
 
 function evaluateForward()
---    if isSoughtAfterBlock() then
---        followBlocks()
---        comeBack()
---    end
-    dig()
+    if isSoughtAfterBlock() then followBlocks() end
 end
 
 function evaluateRight()
     turnRight()
-    if shouldDig() then dig() end
+    if isSoughtAfterBlock() then followBlocks() end
     turnLeft()
 end
 
 function evaluateLeft()
     turnLeft()
-    if shouldDig() then dig() end
+    if isSoughtAfterBlock() then followBlocks() end
     turnRight()
+end
+
+function evaluateUp()
+    if shouldDigUp() then digUp() end
+end
+
+function evaluateDown()
+    if shouldDigDown() then digDown() end
+end
+
+function evaluate()
+    evaluateForward()
+    evaluateRight()
+    evaluateLeft()
+    evaluateDown()
+    evaluateUp()
 end
 
 while true do
     if isInventoryFull() then print("My inventory is full! Mr. Stark, I don't feel so good...") break end
     if shouldRefuel() and hasNoFuel() then print("I'm outa fuel!") break end
     if shouldRefuel() then refuel() end
-    evaluateForward()
-    evaluateRight()
-    evaluateLeft()
+    evaluate()
+    dig()
     moveUp()
-    evaluateForward()
-    evaluateRight()
-    evaluateLeft()
+    evaluate()
+    dig()
     moveDown()
     moveForward()
 end
