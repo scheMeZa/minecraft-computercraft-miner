@@ -71,7 +71,8 @@ end
 function hasFuel()
     for slotIndex = 1, 16, 1
     do
-        if isFuelItem(turtle.getItemDetail(slotIndex)) then
+        local item = turtle.getItemDetail(slotIndex)
+        if item and isFuelItem(item) then
             return true
         end
     end
