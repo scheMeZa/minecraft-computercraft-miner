@@ -143,10 +143,10 @@ function turnLeft()
         direction = "left"
     elseif direction == "right" then
         direction = "forward"
-    elseif direction == "behind" then
+    elseif direction == "backward" then
         direction = "right"
     elseif direction == "left" then
-        direction = "behind"
+        direction = "backward"
     end
 end
 
@@ -156,27 +156,43 @@ function turnRight()
     if direction == "forward" then
         direction = "right"
     elseif direction == "right" then
-        direction = "behind"
-    elseif direction == "behind" then
+        direction = "backward"
+    elseif direction == "backward" then
         direction = "left"
     elseif direction == "left" then
         direction = "forward"
     end
 end
 
+function updateName()
+    os.setComputerLabel(coordinates.x .. " " .. coordinates.y .. " " .. coordinates.z .. " " .. direction)
+end
+
 function moveUp()
     turtle.up()
     coordinates.y = coordinates.y + 1
+    updateName()
 end
 
 function moveDown()
     turtle.down()
     coordinates.y = coordinates.y - 1
+    updateName()
 end
 
 function moveForward()
-    turtle.forward()
-    coordinates.z = coordinates.z - 1
+    local moved = turtle.forward()
+    if not moved then return end
+    if direction == "forward" then
+        coordinates.z = coordinates.z + 1
+    elseif direction == "right" then
+        coordinates.x = coordinates.x + 1
+    elseif direction == "left" then
+        coordinates.x = coordinates.x - 1
+    elseif direction == "backward" then
+        coordinates.z = coordinates.z - 1
+    end
+    updateName()
 end
 
 function dig()
