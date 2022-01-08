@@ -302,7 +302,7 @@ end
 
 function evaluate()
     if isEvaluating == false then
-        lastLocation = coordinates
+        lastLocation = table.copy(coordinates)
     end
 
     isEvaluating = true
@@ -356,6 +356,12 @@ function goTo(x, y, z)
         digForward()
         moveForward()
     end
+end
+
+function table.copy(t)
+    local u = { }
+    for k, v in pairs(t) do u[k] = v end
+    return setmetatable(u, getmetatable(t))
 end
 
 while true do
