@@ -7,6 +7,7 @@ keep = {
     "minecraft:deepslate_iron_ore",
     "minecraft:deepslate_gold_ore",
     "minecraft:deepslate_redstone_ore",
+    "minecraft:redstone_ore",
     "mysticalworld:amethyst",
     "mysticalworld:amethyst_ore",
     "mysticalworld:quicksilver_ore",
