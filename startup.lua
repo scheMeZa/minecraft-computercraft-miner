@@ -228,7 +228,7 @@ function digDown()
 end
 
 function comeBack()
-    goTo(coordinates.x, coordinates.y, coordinates.z)
+    goTo(lastLocation.x, lastLocation.y, lastLocation.z)
     setDirection('north')
 end
 
