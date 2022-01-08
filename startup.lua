@@ -182,23 +182,23 @@ function turnRight()
 end
 
 function updateName()
-    os.setComputerLabel(
-            coordinates.x
-                    .. " "
-                    .. coordinates.y
-                    .. " "
-                    .. coordinates.z
-                    .. " "
-                    .. direction
-                    .. " "
-                    .. lastLocation.x
-                    .. " "
-                    .. lastLocation.y
-                    .. " "
-                    .. lastLocation.z
-                    .. " "
-                    .. tostring(isEvaluating)
-    )
+    --os.setComputerLabel(
+    --        coordinates.x
+    --                .. " "
+    --                .. coordinates.y
+    --                .. " "
+    --                .. coordinates.z
+    --                .. " "
+    --                .. direction
+    --                .. " "
+    --                .. lastLocation.x
+    --                .. " "
+    --                .. lastLocation.y
+    --                .. " "
+    --                .. lastLocation.z
+    --                .. " "
+    --                .. tostring(isEvaluating)
+    --)
 end
 
 function moveUp()
