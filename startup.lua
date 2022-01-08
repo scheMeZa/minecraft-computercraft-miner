@@ -180,7 +180,21 @@ function turnRight()
 end
 
 function updateName()
-    os.setComputerLabel(coordinates.x .. " " .. coordinates.y .. " " .. coordinates.z .. " " .. direction)
+    os.setComputerLabel(
+            coordinates.x
+                    .. " "
+                    .. coordinates.y
+                    .. " "
+                    .. coordinates.z
+                    .. " "
+                    .. direction
+                    .. " "
+                    .. lastLocation.x
+                    .. " "
+                    .. lastLocation.y
+                    .. " "
+                    .. lastLocation.z
+    )
 end
 
 function moveUp()
