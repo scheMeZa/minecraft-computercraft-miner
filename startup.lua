@@ -29,6 +29,7 @@ coordinates = {
 }
 
 lastLocation = null
+isEvaluating = false
 
 direction = "north"
 
@@ -37,21 +38,27 @@ os.setComputerLabel("Hi! My name is Ax")
 function isInventoryFull()
     for slotIndex = 1, 16, 1
     do
-        if turtle.getItemCount(slotIndex) == 0 then return false end
+        if turtle.getItemCount(slotIndex) == 0 then
+            return false
+        end
     end
     return true
 end
 
 function isWhitelistedItem(item)
     for _, value in ipairs(keep) do
-        if item.name == value then return true end
+        if item.name == value then
+            return true
+        end
     end
     return false
 end
 
 function isFuelItem(item)
     for _, value in ipairs(fuel) do
-        if item.name == value then return true end
+        if item.name == value then
+            return true
+        end
     end
     return false
 end
@@ -71,7 +78,9 @@ function sortInventory()
     do
         local item = turtle.getItemDetail(slotIndex)
         if item then
-            if shouldKeepItem(item) == false then dropItem(slotIndex) end
+            if shouldKeepItem(item) == false then
+                dropItem(slotIndex)
+            end
         end
     end
 end
@@ -106,12 +115,14 @@ function refuel()
     do
         local item = turtle.getItemDetail(slotIndex)
         if item then
-            if isFuelItem(item) == true then return consumeFuel(slotIndex) end
+            if isFuelItem(item) == true then
+                return consumeFuel(slotIndex)
+            end
         end
     end
 end
 
-function isSoughtAfterBlock()
+function isSoughtAfterBlockForward()
     local success, item = turtle.inspect()
     return success and (isWhitelistedItem(item) or isFuelItem(item))
 end
@@ -126,8 +137,8 @@ function isSoughtAfterBlockDown()
     return success and (isWhitelistedItem(item) or isFuelItem(item))
 end
 
-function shouldDig()
-    return isSoughtAfterBlock()
+function shouldDigForward()
+    return isSoughtAfterBlockForward()
 end
 
 function shouldDigUp()
@@ -186,7 +197,9 @@ end
 
 function moveForward()
     local moved = turtle.forward()
-    if not moved then return end
+    if not moved then
+        return
+    end
     if direction == "north" then
         coordinates.z = coordinates.z + 1
     elseif direction == "east" then
@@ -199,7 +212,7 @@ function moveForward()
     updateName()
 end
 
-function dig()
+function digForward()
     turtle.dig()
     sortInventory()
 end
@@ -215,8 +228,8 @@ function digDown()
 end
 
 function comeBack()
-    -- TODO
-    setDirection(lastLocation.direction)
+    goTo(coordinates.x, coordinates.y, coordinates.z)
+    setDirection('north')
 end
 
 function followBlocksUp()
@@ -232,37 +245,52 @@ function followBlocksDown()
 end
 
 function evaluateForward()
-    if isSoughtAfterBlock() then followBlocks() end
+    if isSoughtAfterBlockForward() then
+        followBlocks()
+    end
 end
 
 function evaluateRight()
     turnRight()
-    if isSoughtAfterBlock() then followBlocks() end
+    if isSoughtAfterBlockForward() then
+        followBlocks()
+    end
     turnLeft()
 end
 
 function evaluateLeft()
     turnLeft()
-    if isSoughtAfterBlock() then followBlocks() end
+    if isSoughtAfterBlockForward() then
+        followBlocks()
+    end
     turnRight()
 end
 
 function evaluateUp()
-    if isSoughtAfterBlockUp() then followBlocksUp() end
+    if isSoughtAfterBlockUp() then
+        followBlocksUp()
+    end
 end
 
 function evaluateDown()
-    if isSoughtAfterBlockDown() then followBlocksDown() end
+    if isSoughtAfterBlockDown() then
+        followBlocksDown()
+    end
 end
 
 function evaluate()
-    isEvaluating = true;
+    if (isEvaluating == false) then
+        lastLocation = coordinates
+    end
+
+    isEvaluating = true
     evaluateForward()
     evaluateRight()
     evaluateLeft()
     evaluateDown()
     evaluateUp()
-    isEvaluating = false;
+    isEvaluating = false
+    comeBack()
 end
 
 function setDirection(soughtDirection)
@@ -275,13 +303,13 @@ end
 function goTo(x, y, z)
     while coordinates.x > x do
         setDirection('west')
-        dig()
+        digForward()
         moveForward()
     end
 
     while coordinates.x < x do
         setDirection('east')
-        dig()
+        digForward()
         moveForward()
     end
 
@@ -297,28 +325,37 @@ function goTo(x, y, z)
 
     while coordinates.z > z do
         setDirection('south')
-        dig()
+        digForward()
         moveForward()
     end
 
     while coordinates.z < z do
         setDirection('north')
-        dig()
+        digForward()
         moveForward()
     end
 end
 
-goTo(3, 3, 3)
+while true do
+    if isInventoryFull() then
+        print("My inventory is full! Mr. Stark, I don't feel so good...")
+        break
+    end
+    if shouldRefuel() and hasNoFuel() then
+        print("I'm outa fuel!")
+        break
+    end
+    if shouldRefuel() then
+        refuel()
+    end
 
---while true do
---    if isInventoryFull() then print("My inventory is full! Mr. Stark, I don't feel so good...") break end
---    if shouldRefuel() and hasNoFuel() then print("I'm outa fuel!") break end
---    if shouldRefuel() then refuel() end
---    evaluate()
---    dig()
---    moveUp()
---    evaluate()
---    dig()
---    moveDown()
---    moveNorth()
---end
+    evaluate()
+    digForward()
+    moveUp()
+
+    evaluate()
+    digForward()
+    moveDown()
+
+    moveForward()
+end
