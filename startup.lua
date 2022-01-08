@@ -28,9 +28,9 @@ coordinates = {
     z = 0
 }
 
-lastLocation = {}
+lastLocation = null
 
-direction = "forward"
+direction = "north"
 
 os.setComputerLabel("Hi! My name is Ax")
 
@@ -143,28 +143,28 @@ end
 function turnLeft()
     turtle.turnLeft()
 
-    if direction == "forward" then
-        direction = "left"
-    elseif direction == "right" then
-        direction = "forward"
-    elseif direction == "backward" then
-        direction = "right"
-    elseif direction == "left" then
-        direction = "backward"
+    if direction == "north" then
+        direction = "west"
+    elseif direction == "east" then
+        direction = "north"
+    elseif direction == "south" then
+        direction = "east"
+    elseif direction == "west" then
+        direction = "south"
     end
 end
 
 function turnRight()
     turtle.turnRight()
 
-    if direction == "forward" then
-        direction = "right"
-    elseif direction == "right" then
-        direction = "backward"
-    elseif direction == "backward" then
-        direction = "left"
-    elseif direction == "left" then
-        direction = "forward"
+    if direction == "north" then
+        direction = "east"
+    elseif direction == "east" then
+        direction = "south"
+    elseif direction == "south" then
+        direction = "west"
+    elseif direction == "west" then
+        direction = "north"
     end
 end
 
@@ -187,13 +187,13 @@ end
 function moveForward()
     local moved = turtle.forward()
     if not moved then return end
-    if direction == "forward" then
+    if direction == "north" then
         coordinates.z = coordinates.z + 1
-    elseif direction == "right" then
+    elseif direction == "east" then
         coordinates.x = coordinates.x + 1
-    elseif direction == "left" then
+    elseif direction == "west" then
         coordinates.x = coordinates.x - 1
-    elseif direction == "backward" then
+    elseif direction == "south" then
         coordinates.z = coordinates.z - 1
     end
     updateName()
@@ -217,12 +217,6 @@ end
 function comeBack()
     -- TODO
     setDirection(lastLocation.direction)
-end
-
-function followBlocks()
-    dig()
-    moveForward()
-    evaluate()
 end
 
 function followBlocksUp()
@@ -262,22 +256,69 @@ function evaluateDown()
 end
 
 function evaluate()
+    isEvaluating = true;
     evaluateForward()
     evaluateRight()
     evaluateLeft()
     evaluateDown()
     evaluateUp()
+    isEvaluating = false;
 end
 
-while true do
-    if isInventoryFull() then print("My inventory is full! Mr. Stark, I don't feel so good...") break end
-    if shouldRefuel() and hasNoFuel() then print("I'm outa fuel!") break end
-    if shouldRefuel() then refuel() end
-    evaluate()
-    dig()
-    moveUp()
-    evaluate()
-    dig()
-    moveDown()
-    moveForward()
+function setDirection(soughtDirection)
+    -- TODO: Can be improved.
+    while direction ~= soughtDirection do
+        turnLeft()
+    end
 end
+
+function goTo(x, y, z)
+    while coordinates.x > x do
+        setDirection('west')
+        dig()
+        moveForward()
+    end
+
+    while coordinates.x < x do
+        setDirection('east')
+        dig()
+        moveForward()
+    end
+
+    while coordinates.y > y do
+        digDown()
+        moveDown()
+    end
+
+    while coordinates.y < y do
+        digUp()
+        moveUp()
+    end
+
+    while coordinates.z > z do
+        setDirection('south')
+        dig()
+        moveForward()
+    end
+
+    while coordinates.z < z do
+        setDirection('north')
+        dig()
+        moveForward()
+    end
+end
+
+goTo(3, 3, 3)
+
+--while true do
+--    if isInventoryFull() then print("My inventory is full! Mr. Stark, I don't feel so good...") break end
+--    if shouldRefuel() and hasNoFuel() then print("I'm outa fuel!") break end
+--    if shouldRefuel() then refuel() end
+--    evaluate()
+--    dig()
+--    moveUp()
+--    evaluate()
+--    dig()
+--    moveDown()
+--    moveNorth()
+--end
