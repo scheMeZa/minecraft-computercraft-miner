@@ -232,6 +232,12 @@ function comeBack()
     setDirection('north')
 end
 
+function followBlocksForward()
+    digForward()
+    moveForward()
+    evaluate()
+end
+
 function followBlocksUp()
     digUp()
     moveUp()
@@ -246,14 +252,14 @@ end
 
 function evaluateForward()
     if isSoughtAfterBlockForward() then
-        followBlocks()
+        followBlocksForward()
     end
 end
 
 function evaluateRight()
     turnRight()
     if isSoughtAfterBlockForward() then
-        followBlocks()
+        followBlocksForward()
     end
     turnLeft()
 end
@@ -261,7 +267,7 @@ end
 function evaluateLeft()
     turnLeft()
     if isSoughtAfterBlockForward() then
-        followBlocks()
+        followBlocksForward()
     end
     turnRight()
 end
