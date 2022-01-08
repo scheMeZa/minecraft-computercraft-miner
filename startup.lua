@@ -194,6 +194,8 @@ function updateName()
                     .. lastLocation.y
                     .. " "
                     .. lastLocation.z
+                    .. " "
+                    .. isEvaluating
     )
 end
 
@@ -299,7 +301,7 @@ function evaluateDown()
 end
 
 function evaluate()
-    if (isEvaluating == false) then
+    if isEvaluating == false then
         lastLocation = coordinates
     end
 
