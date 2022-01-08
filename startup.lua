@@ -195,7 +195,7 @@ function updateName()
                     .. " "
                     .. lastLocation.z
                     .. " "
-                    .. isEvaluating
+                    .. tostring(isEvaluating)
     )
 end
 
